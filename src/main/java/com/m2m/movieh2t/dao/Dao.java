@@ -32,6 +32,7 @@ public abstract class Dao<T> {
         return query.getResultList();
     }
 
+
     public T findOne(Class<T> clazz, String sql, Object ... params) {
         TypedQuery<T> query = em.createQuery(sql,clazz);
         for(int i = 0; i < params.length; i++){

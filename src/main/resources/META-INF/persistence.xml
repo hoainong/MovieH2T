@@ -1,25 +1,25 @@
-<persistence
-        version="2.1"
-        xmlns="http://xmlns.jcp.org/xml/ns/persistence"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence
-http://xmlns.jcp.org/xml/ns/persistence_2_1.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd"
+             version="2.2">
+
     <persistence-unit name="movieh2t" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+
+        <!-- Đặc tả đối tượng thực thể (Entity) trong package của bạn -->
         <class>com.m2m.movieh2t.entity.User</class>
-        <exclude-unlisted-classes>true</exclude-unlisted-classes>
+
+        <!-- Cấu hình kết nối cơ sở dữ liệu -->
         <properties>
-            <property name="javax.persistence.schema-generation.database.action"
-                      value="drop-and-create"/>
-            <property name="hibernate.format_sql" value="true"/>
-            <property name ="hibernate.show_sql" value = "true" />
-            <property name="hibernate.use_sql_comments" value="true"/>
-            <property name="org.hibernate.SQL" value="debug"/>
-            <property name="org.hibernate.type.descriptor.sql.BasicBinder" value="debug"/>
-            <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />
-            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/webmovie?useSSL=false" />
-            <property name="javax.persistence.jdbc.user" value="hoainong" />
-            <property name="javax.persistence.jdbc.password" value="123456" />
+            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/webmovie"/>
+            <property name="javax.persistence.jdbc.user" value="hoainong"/>
+            <property name="javax.persistence.jdbc.password" value="123456"/>
+            <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
+
+            <!-- Các thiết lập khác -->
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
         </properties>
     </persistence-unit>
 </persistence>

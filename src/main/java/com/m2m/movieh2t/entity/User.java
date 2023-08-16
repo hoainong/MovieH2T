@@ -6,6 +6,15 @@ import javax.persistence.*;
 @Entity
 @Table(name = "users")
 public class User {
+    public User() {
+    }
+    public User(String name, String email, String password,Boolean isActive) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.isActive = isActive;
+    }
+
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
@@ -22,7 +31,8 @@ public class User {
     private String password;
 
     @Column(name = "is_active")
-    private String isActive;
+    private Boolean isActive ;
+
 
     public Integer getId() {
         return id;
@@ -64,11 +74,11 @@ public class User {
         this.password = password;
     }
 
-    public String getIsActive() {
+    public Boolean getIsActive() {
         return isActive;
     }
 
-    public void setIsActive(String isActive) {
+    public void setIsActive(Boolean isActive) {
         this.isActive = isActive;
     }
 }
