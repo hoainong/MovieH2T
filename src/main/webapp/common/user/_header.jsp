@@ -59,12 +59,21 @@
             >
               <span class="icon_profile"></span>
             </a>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-              <li><a class="dropdown-item text-dark" href="/login">Login</a></li>
-              <li><a class="dropdown-item text-dark" href="/signup">SignUp</a></li>
-              <li><a class="dropdown-item text-dark" href="/forget-password">Forget-password</a></li>
-            </ul>
-
+          <c:choose>
+            <c:when test="${not empty sessionScope.currentUser}">
+              <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <li><a class="dropdown-item text-dark" href="/logout">Logout</a></li>
+                <li><a class="dropdown-item text-dark" href="/setprofile">Set-Profile</a></li>
+              </ul>
+            </c:when>
+            <c:otherwise>
+              <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <li><a class="dropdown-item text-dark" href="/login">Login</a></li>
+                <li><a class="dropdown-item text-dark" href="/signup">SignUp</a></li>
+                <li><a class="dropdown-item text-dark" href="/forget-password">Forget-password</a></li>
+              </ul>
+            </c:otherwise>
+          </c:choose>
         </div>
       </div>
     </div>
