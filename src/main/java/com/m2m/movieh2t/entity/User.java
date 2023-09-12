@@ -14,6 +14,16 @@ public class User {
         this.password = password;
         this.isActive = isActive;
     }
+    public User(String name, String email, Boolean isActive) {
+        this.name = name;
+        this.email = email;
+        this.isActive = isActive;
+    }
+    public User(String name, String email, String password) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+    }
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

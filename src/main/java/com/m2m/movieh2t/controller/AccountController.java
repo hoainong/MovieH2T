@@ -1,10 +1,13 @@
 package com.m2m.movieh2t.controller;
 
+import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeRequestUrl;
 import com.m2m.movieh2t.constant.AccountMessage;
+import com.m2m.movieh2t.constant.GoogleConstant;
 import com.m2m.movieh2t.constant.SessionAttr;
 import com.m2m.movieh2t.entity.User;
 import com.m2m.movieh2t.service.UserService;
 import com.m2m.movieh2t.service.serviceImpl.UserServiceImpl;
+import com.m2m.movieh2t.utils.PasswordHasher;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -14,8 +17,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.Arrays;
 
-@WebServlet(urlPatterns = {"/login", "/signup", "/forget-password", "/logout"})
+@WebServlet(urlPatterns = {"/login", "/signup", "/forget-password", "/logout","/login-google"})
 public class AccountController extends HttpServlet {
 
     private UserService service = new UserServiceImpl();
@@ -41,6 +45,9 @@ public class AccountController extends HttpServlet {
                 break;
             case "/logout":
                 logOut(session, resp);
+                break;
+            case "/login-google":
+                loginGoogle(session, resp);
                 break;
         }
     }
@@ -89,7 +96,7 @@ public class AccountController extends HttpServlet {
                 req.setAttribute("error",AccountMessage.ERROR_SIGNUP_EXISTEMAIL);
                 req.getRequestDispatcher("/view/user/signup.jsp").forward(req,resp);
             }else {
-                User user = new User(name,email,password,true);
+                User user = new User(name,email, PasswordHasher.hashPassword(password),true);
                 service.create(user);
                 session.setAttribute(SessionAttr.CURRENT_USER,user);
                 resp.sendRedirect("/home");
@@ -99,7 +106,6 @@ public class AccountController extends HttpServlet {
 
     private void postForget(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     }
-
     /*DOPOST - END*/
 
     /*DOGET - BIGIN*/
@@ -107,6 +113,21 @@ public class AccountController extends HttpServlet {
         RequestDispatcher dispatcher = req.getRequestDispatcher("/view/user/login.jsp");
         dispatcher.forward(req, resp);
     }
+    private void loginGoogle(HttpSession session, HttpServletResponse response) throws ServletException, IOException {
+        if (session.getAttribute(SessionAttr.CURRENT_USER) == null) {
+            // Chưa đăng nhập, tạo URL và chuyển hướng đến trang đăng nhập Google
+            String googleLoginURL = new GoogleAuthorizationCodeRequestUrl(
+                    GoogleConstant.CLIENT_ID,
+                    GoogleConstant.REDIRECT_URI,
+                    Arrays.asList("openid", "email", "profile")
+            ).setAccessType("offline").build();
+            response.sendRedirect(googleLoginURL);
+        } else {
+            // Đã đăng nhập, chuyển hướng đến trang /home
+            response.sendRedirect("/home");
+        }
+    }
+
 
     private void getSignUp(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         RequestDispatcher dispatcher = req.getRequestDispatcher("/view/user/signup.jsp");

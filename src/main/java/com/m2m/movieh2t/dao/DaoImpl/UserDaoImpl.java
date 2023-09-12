@@ -12,6 +12,12 @@ public class UserDaoImpl extends Dao<User> implements UserDao {
     }
 
     @Override
+    public User findByEmail(String email) {
+        String sql = "SELECT o FROM User o WHERE o.email = ?0";
+        return super.findOne(User.class,sql,email);
+    }
+
+    @Override
     public List<User> findAll(boolean isActive) {
         return super.findAll(User.class,isActive);
     }
