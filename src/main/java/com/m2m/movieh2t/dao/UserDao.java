@@ -8,7 +8,6 @@ public interface UserDao {
     User findById(Integer id);
     User findByEmail(String email);
     List<User> findAll(boolean isActive);
-    User login(String email, String password);
 
     User create(User user);
 }

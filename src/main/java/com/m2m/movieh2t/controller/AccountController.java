@@ -5,11 +5,14 @@ import com.m2m.movieh2t.constant.AccountMessage;
 import com.m2m.movieh2t.constant.GoogleConstant;
 import com.m2m.movieh2t.constant.SessionAttr;
 import com.m2m.movieh2t.entity.User;
+import com.m2m.movieh2t.service.EmailService;
 import com.m2m.movieh2t.service.UserService;
+import com.m2m.movieh2t.service.serviceImpl.EmailServiceImpl;
 import com.m2m.movieh2t.service.serviceImpl.UserServiceImpl;
 import com.m2m.movieh2t.utils.PasswordHasher;
 
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -17,12 +20,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.Arrays;
 
 @WebServlet(urlPatterns = {"/login", "/signup", "/forget-password", "/logout","/login-google"})
 public class AccountController extends HttpServlet {
 
     private UserService service = new UserServiceImpl();
+    private EmailService emailService = new EmailServiceImpl();
 
     @Override
     public void init() throws ServletException {
@@ -56,12 +62,25 @@ public class AccountController extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
         String uri = req.getRequestURI();
+
         switch (uri) {
             case "/login":
-                postLogin(session, req, resp);
+                try {
+                    postLogin(session, req, resp);
+                } catch (NoSuchAlgorithmException e) {
+                    throw new RuntimeException(e);
+                } catch (InvalidKeySpecException e) {
+                    throw new RuntimeException(e);
+                }
                 break;
             case "/signup":
-                postSignUp(session, req, resp);
+                try {
+                    postSignUp(session, req, resp);
+                } catch (NoSuchAlgorithmException e) {
+                    throw new RuntimeException(e);
+                } catch (InvalidKeySpecException e) {
+                    throw new RuntimeException(e);
+                }
                 break;
             case "/forget-password":
                 postForget(req, resp);
@@ -70,7 +89,7 @@ public class AccountController extends HttpServlet {
     }
 
     /*DOPOST - BIGIN*/
-    private void postLogin(HttpSession session, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    private void postLogin(HttpSession session, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException, NoSuchAlgorithmException, InvalidKeySpecException {
         String email = req.getParameter("email");
         String password = req.getParameter("password");
         User user = service.login(email, password);
@@ -84,7 +103,7 @@ public class AccountController extends HttpServlet {
         }
     }
 
-    private void postSignUp(HttpSession session, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    private void postSignUp(HttpSession session, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException, NoSuchAlgorithmException, InvalidKeySpecException {
         String email = req.getParameter("email");
         String name = req.getParameter("name");
         String password = req.getParameter("password");
@@ -105,6 +124,15 @@ public class AccountController extends HttpServlet {
     }
 
     private void postForget(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+           /* String email = req.getParameter("email");
+            String
+
+           User existEmail = service.findByEmail(email);
+           if(existEmail != null){
+               emailService.sendMail(context,existEmail);
+               resp.sendRedirect("login");
+           }*/
+
     }
     /*DOPOST - END*/
 

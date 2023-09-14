@@ -6,6 +6,8 @@ import com.m2m.movieh2t.entity.User;
 import com.m2m.movieh2t.service.UserService;
 import com.m2m.movieh2t.utils.PasswordHasher;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.List;
 
 public class UserServiceImpl implements UserService {
@@ -32,7 +34,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User login(String email, String password) {
-        return dao.login(email,PasswordHasher.hashPassword(password));
+        if(PasswordHasher.valuate(password)){
+            return dao.findByEmail(email);
+        }
+        return null;
     }
 
     @Override
@@ -54,7 +59,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Boolean exist(String email) {
-        List<User> userLst = dao.findAll(false);
+        List<User> userLst = dao.findAll(true);
         for(User user : userLst){
             if(user.getEmail().equals(email)){
                 return true;

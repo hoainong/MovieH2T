@@ -22,11 +22,6 @@ public class UserDaoImpl extends Dao<User> implements UserDao {
         return super.findAll(User.class,isActive);
     }
 
-    @Override
-    public User login(String email, String password) {
-        String sql = "SELECT o FROM User o WHERE o.email = ?0 AND o.password = ?1";
-        return super.findOne(User.class,sql,email,password);
-    }
 
     @Override
     public User create(User user) {

@@ -1,6 +1,8 @@
 package com.m2m.movieh2t.controller;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -16,6 +18,7 @@ import com.m2m.movieh2t.constant.SessionAttr;
 import com.m2m.movieh2t.entity.User;
 import com.m2m.movieh2t.service.UserService;
 import com.m2m.movieh2t.service.serviceImpl.UserServiceImpl;
+import com.m2m.movieh2t.utils.PasswordHasher;
 
 @WebServlet("/google-login2")
 public class LoginGoogle extends HttpServlet {
@@ -50,7 +53,7 @@ public class LoginGoogle extends HttpServlet {
                     session.setAttribute(SessionAttr.CURRENT_USER,user);
 
                 }else {
-                    User user =  service.create(fullName,email,password);
+                     User user = service.create(fullName,email, PasswordHasher.hashPassword(password));
                     session.setAttribute(SessionAttr.CURRENT_USER,user);
                 }
                 response.sendRedirect("/home");
