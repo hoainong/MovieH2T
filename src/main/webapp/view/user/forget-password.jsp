@@ -45,7 +45,7 @@
                         </div>
                         <button type="submit" class="site-btn">Send</button>
                     </form>
-                    <a href="/login" class="forget_pass">Login</a>
+                    <a href="/login" class="site-btn">Login</a>
                 </div>
             </div>
             <div class="col-lg-6">

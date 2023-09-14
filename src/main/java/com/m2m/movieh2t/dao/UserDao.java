@@ -10,4 +10,5 @@ public interface UserDao {
     List<User> findAll(boolean isActive);
 
     User create(User user);
+    User update(User user);
 }

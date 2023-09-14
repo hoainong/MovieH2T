@@ -27,4 +27,9 @@ public class UserDaoImpl extends Dao<User> implements UserDao {
     public User create(User user) {
         return super.create(user);
     }
+
+    @Override
+    public User update(User user) {
+        return super.upload(user);
+    }
 }

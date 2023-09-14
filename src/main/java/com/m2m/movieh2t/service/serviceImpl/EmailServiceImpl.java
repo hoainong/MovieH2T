@@ -3,24 +3,40 @@ package com.m2m.movieh2t.service.serviceImpl;
 import com.m2m.movieh2t.constant.EmailMsg;
 import com.m2m.movieh2t.entity.User;
 import com.m2m.movieh2t.service.EmailService;
+import com.m2m.movieh2t.service.UserService;
 import com.m2m.movieh2t.utils.EmailUtility;
+import com.m2m.movieh2t.utils.PasswordHasher;
 
 import javax.servlet.ServletContext;
+import java.security.SecureRandom;
 
 public class EmailServiceImpl implements EmailService {
+    UserService service = new UserServiceImpl();
     @Override
-    public void sendMail(ServletContext context, User recipient) {
-        String host = context.getInitParameter("host");
-        String port = context.getInitParameter("port");
-        String user = context.getInitParameter("user");
-        String pass = context.getInitParameter("pass");
+    public void sendMail(User recipient) {
+
 
         try {
-            String newPass = String.valueOf(Math.random() * ((999999-100000)+1)+100000);
-            EmailUtility.sendEmail(host, port, user, pass, recipient.getEmail(), EmailMsg.SubjectForgotPass,
+            String newPass = generateRandomPassword(6);
+            service.update(recipient,newPass);
+            EmailUtility.sendEmail( EmailMsg.EMAIL, EmailMsg.PASSWORD
+                    , recipient.getEmail(), EmailMsg.SubjectForgotPass,
                     newPass);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+
+    }
+    public static String generateRandomPassword(int length) {
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+";
+        SecureRandom random = new SecureRandom();
+        StringBuilder password = new StringBuilder();
+
+        for (int i = 0; i < length; i++) {
+            int index = random.nextInt(characters.length());
+            password.append(characters.charAt(index));
+        }
+
+        return password.toString();
     }
 }

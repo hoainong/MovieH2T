@@ -2,6 +2,7 @@ package com.m2m.movieh2t.controller;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeRequestUrl;
 import com.m2m.movieh2t.constant.AccountMessage;
+import com.m2m.movieh2t.constant.EmailMsg;
 import com.m2m.movieh2t.constant.GoogleConstant;
 import com.m2m.movieh2t.constant.SessionAttr;
 import com.m2m.movieh2t.entity.User;
@@ -24,7 +25,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Arrays;
 
-@WebServlet(urlPatterns = {"/login", "/signup", "/forget-password", "/logout","/login-google"})
+@WebServlet(urlPatterns = {"/login", "/signup", "/forget-password", "/logout", "/login-google"})
 public class AccountController extends HttpServlet {
 
     private UserService service = new UserServiceImpl();
@@ -107,31 +108,40 @@ public class AccountController extends HttpServlet {
         String email = req.getParameter("email");
         String name = req.getParameter("name");
         String password = req.getParameter("password");
-        if(email.isBlank() || name.isBlank() || password.isBlank()){
-            req.setAttribute("error",AccountMessage.ERROR_SIGNUP);
-            req.getRequestDispatcher("/view/user/signup.jsp").forward(req,resp);
-        }else {
-            if(service.exist(email)){
-                req.setAttribute("error",AccountMessage.ERROR_SIGNUP_EXISTEMAIL);
-                req.getRequestDispatcher("/view/user/signup.jsp").forward(req,resp);
-            }else {
-                User user = new User(name,email, PasswordHasher.hashPassword(password),true);
+        if (email.isBlank() || name.isBlank() || password.isBlank()) {
+            req.setAttribute("error", AccountMessage.ERROR_SIGNUP);
+            req.getRequestDispatcher("/view/user/signup.jsp").forward(req, resp);
+        } else {
+            if (service.exist(email)) {
+                req.setAttribute("error", AccountMessage.ERROR_SIGNUP_EXISTEMAIL);
+                req.getRequestDispatcher("/view/user/signup.jsp").forward(req, resp);
+            } else {
+                User user = new User(name, email, PasswordHasher.hashPassword(password), true);
                 service.create(user);
-                session.setAttribute(SessionAttr.CURRENT_USER,user);
+                session.setAttribute(SessionAttr.CURRENT_USER, user);
                 resp.sendRedirect("/home");
             }
         }
     }
 
     private void postForget(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-           /* String email = req.getParameter("email");
-            String
+        String email = req.getParameter("email");
+        User existEmail = service.findByEmail(email.trim());
+        if(email.isBlank()){
+            req.setAttribute("error", AccountMessage.ERROR_SIGNUP);
+            RequestDispatcher dispatcher = req.getRequestDispatcher("/view/user/forget-password.jsp");
+            dispatcher.forward(req, resp);
 
-           User existEmail = service.findByEmail(email);
-           if(existEmail != null){
-               emailService.sendMail(context,existEmail);
-               resp.sendRedirect("login");
-           }*/
+        }else {
+            if (existEmail != null) {
+                emailService.sendMail(existEmail);
+                resp.sendRedirect("/login");
+            }else {
+                req.setAttribute("error", AccountMessage.ERROR_EMAIL);
+                RequestDispatcher dispatcher = req.getRequestDispatcher("/view/user/forget-password.jsp");
+                dispatcher.forward(req, resp);
+            }
+        }
 
     }
     /*DOPOST - END*/
@@ -141,6 +151,7 @@ public class AccountController extends HttpServlet {
         RequestDispatcher dispatcher = req.getRequestDispatcher("/view/user/login.jsp");
         dispatcher.forward(req, resp);
     }
+
     private void loginGoogle(HttpSession session, HttpServletResponse response) throws ServletException, IOException {
         if (session.getAttribute(SessionAttr.CURRENT_USER) == null) {
             // Chưa đăng nhập, tạo URL và chuyển hướng đến trang đăng nhập Google

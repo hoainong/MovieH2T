@@ -67,4 +67,10 @@ public class UserServiceImpl implements UserService {
         }
         return false;
     }
+
+    @Override
+    public User update(User user,String password) {
+        user.setPassword(PasswordHasher.hashPassword(password));
+        return dao.update(user);
+    }
 }

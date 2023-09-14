@@ -14,8 +14,10 @@ public interface UserService {
     User login(String email, String password);
 
     User create(User user);
+
     User create(String email,String name);
     User create(String email,String name,String password) ;
 
     Boolean exist(String email);
+    User update(User user,String password);
 }

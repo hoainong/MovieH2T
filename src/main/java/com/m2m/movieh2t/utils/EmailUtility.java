@@ -8,16 +8,17 @@ import java.util.Date;
 import java.util.Properties;
 
 public class EmailUtility {
-    public static void sendEmail(String host, String port
-            , final String userName, final String password
+    public static void sendEmail(
+            final String userName, final String password
             , String toAddress,String subject, String message)
             throws AddressException, MessagingException {
-        // sets SMTP server properties
-        Properties properties = new Properties();
-        properties.put("mail.smtp.host", host);
-        properties.put("mail.smtp.port", port);
-        properties.put("mail.smtp.auth", "true");
-        properties.put("mail.smtp.starttls.enable", "true");
+        String host = "smtp.gmail.com";
+
+        Properties props = new Properties();
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.host", host);
+        props.put("mail.smtp.port", "587");
 
         Authenticator auth = new Authenticator() {
             @Override
@@ -26,7 +27,7 @@ public class EmailUtility {
             }
         };
 
-        Session session = Session.getInstance(properties, auth);
+        Session session = Session.getInstance(props, auth);
 
         Message msg = new MimeMessage(session);
 
@@ -38,7 +39,5 @@ public class EmailUtility {
         msg.setText(message);
 
         Transport.send(msg);
-
-
     }
 }
