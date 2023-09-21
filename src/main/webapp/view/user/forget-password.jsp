@@ -22,8 +22,7 @@
         <div class="row">
             <div class="col-lg-12 text-center">
                 <div class="normal__breadcrumb__text">
-                    <h2>Login</h2>
-                    <p>Welcome to the MOVIE-H2T.</p>
+                    <h2>FORGOT - PASSWORD</h2>
                 </div>
             </div>
         </div>
@@ -44,9 +43,9 @@
                         <div>
                             <p class="text-danger">${error}</p>
                         </div>
-                        <button type="submit" class="site-btn">Login Now</button>
+                        <button type="submit" class="site-btn">Send</button>
                     </form>
-                    <a href="/login" class="forget_pass">Login</a>
+                    <a href="/login" class="site-btn">Login</a>
                 </div>
             </div>
             <div class="col-lg-6">

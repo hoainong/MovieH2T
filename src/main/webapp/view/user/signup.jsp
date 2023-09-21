@@ -57,7 +57,7 @@
                         <div>
                             <p class="text-danger">${error}</p>
                         </div>
-                        <button type="submit" class="site-btn">Login Now</button>
+                        <button type="submit" class="site-btn">SigUp</button>
                     </form>
                     <h5>Already have an account? <a href="/login">Log In!</a></h5>
                 </div>
